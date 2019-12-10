@@ -47,25 +47,25 @@ def defaultValue(valor):
     return "''"
 
 def renameId(valor):
-  print(valor)
   arreglo = valor.split("_")
   primero = True
   salida = ''
   final = ''
-  if(len(arreglo) == 1) : 
-    salida = salida + arreglo
-  else:
-    for x in arreglo: 
-      x = inflection.singularize(x)
-      if(x == "id"):
-        final = x
+  cuenta = 1
+  for x in arreglo: 
+    x = inflection.singularize(x)
+    if(x == "id"):
+      final = x
+    else:
+      if(primero):
+        primero = False
+        salida = salida + x
       else:
-        if(primero):
-          primero = False
-          salida = salida + x
-        else:
-          salida = salida + x.capitalize()
-    salida = salida + final.capitalize()
+        salida = salida + x.capitalize()
+      
+      if(cuenta == len(arreglo)):
+        salida = salida + final.capitalize()
+    cuenta += 1
   return(salida)
 
 def makeJs(results):
@@ -117,7 +117,10 @@ def makeTs(results):
       "import {\r  SequelizeInstanceExtras,\r  SequelizeModelExtras,\r  SoftDelete\r} from './Extras'")
   file.write("\r\rexport interface " +sys.argv[2]+"Attributes\r  extends SequelizeInstanceExtras {\r")
   for llave, valor, tipo in results:
-    file.write("      "+renameId(llave)+"?: "+dataTypesTS(tipo)+"\r")
+    if(llave == "id"):
+      file.write("      "+llave+"?: "+dataTypesTS(tipo)+"\r")
+    else:
+      file.write("      "+renameId(llave)+"?: "+dataTypesTS(tipo)+"\r")
   file.write("}\r\rexport interface " +
              sys.argv[2]+"Instance\r  extends Sequelize.Instance<"+sys.argv[2]+"Attributes>,\r    "+sys.argv[2]+"Attributes,\r    SequelizeInstanceExtras {}")
   file.write("\r\rexport type "+sys.argv[2]+" = Sequelize.Model<\r  "+sys.argv[2]+"Instance,\r  "+sys.argv[2]+"Attributes")
