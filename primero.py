@@ -5,44 +5,58 @@ from mysql.connector import Error
 
 def dataTypes(valor):
   _valor = valor.split("(")
-  if(_valor[0] != 'text' and _valor[0] != 'datetime'):
+  otros = ["datetime","date", "text"]
+  if(_valor[0] not in otros):
     switcher = {
       'int': 'INTEGER('+_valor[1],
       'varchar': 'STRING('+_valor[1],
       'tinyint': 'INTEGER('+_valor[1],
+      'text': 'TEXT',
+      'smallint': 'INTEGER(1)'
     }
     return switcher.get(_valor[0],"nada")
-  elif(_valor[0] == 'datetime'):
+  elif(_valor[0] == "datetime"):
     return 'DATE'
+  elif(valor == 'date'):
+    return 'DATEONLY'
+  elif(valor == 'text'):
+    return 'TEXT'
   else:
+    print(_valor[0])
     return 'STRING'
 
 
 def dataTypesTS(valor):
   _valor = valor.split("(")
-  if(_valor[0] != 'text' and _valor[0] != 'datetime'):
+  otros = ["datetime", "date", "text"]
+  if(_valor[0] not in otros):
     switcher = {
         'int': 'number',
         'varchar': 'string',
         'tinyint': 'number',
+        'smallint': 'number'
     }
     return switcher.get(_valor[0], "nada")
-  elif(_valor[0] == 'datetime'):
+  elif(_valor[0] == 'datetime' or _valor[0] == 'date'):
     return 'Date'
   else:
     return 'string'
 
 
 def defaultValue(valor):
-  if(valor != 'text' and valor != 'datetime'):
+  otros = ["datetime", "date", "text"]
+  if(valor not in otros):
     switcher = {
         'int': '0',
         'varchar': "''",
-        'tinyint': '0'
+        'tinyint': '0',
+        'smallint': '0'
     }
     return switcher.get(valor, "''")
   elif(valor == 'datetime'):
     return 'DataTypes.NOW'
+  elif(valor == 'date'):
+    return 'sequelize.literal('"0000-00-00"')'
   else:
     return "''"
 
@@ -54,6 +68,10 @@ def renameId(valor):
   cuenta = 1
   for x in arreglo: 
     x = inflection.singularize(x)
+    print(x)
+    if(x == "id_user"):
+      print("si po")
+      return 'modifiedUserId'
     if(x == "id"):
       final = x
     else:
