@@ -5,7 +5,7 @@ from mysql.connector import Error
 
 def dataTypes(valor):
   _valor = valor.split("(")
-  otros = ["datetime","date", "text"]
+  otros = ["datetime","date", "text", "longtext"]
   if(_valor[0] not in otros):
     switcher = {
       'int': 'INTEGER('+_valor[1],
