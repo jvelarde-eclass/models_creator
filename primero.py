@@ -1,11 +1,15 @@
 import sys
 import inflection
+from dotenv import load_dotenv
+import os
 import mysql.connector
 from mysql.connector import Error
 
+load_dotenv(override=True)
+
 def dataTypes(valor):
   _valor = valor.split("(")
-  otros = ["datetime","date", "text"]
+  otros = ["datetime","date", "text", "longtext"]
   if(_valor[0] not in otros):
     switcher = {
       'int': 'INTEGER('+_valor[1],
@@ -147,10 +151,10 @@ def makeTs(results):
 
 def conectar():
   mydb = mysql.connector.connect(
-    host="192.168.10.13",
-    database="eclass_33",
-    user="jvelarde",
-    password="ApzCKTZwtXttw6Lx"
+    host=os.getenv('PY_HOST'),
+    database=os.getenv('PY_DATABASE'),
+    user=os.getenv('PY_USER'),
+    password=os.getenv('PY_PASSWORD')
   )
   return mydb
         
