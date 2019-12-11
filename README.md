@@ -1,3 +1,5 @@
+### ¡Remember complete your `.env`!
+
 ## Install deps with PIP
 * OSX Users: `pip3 install -r requirements.txt`
 * Linux User: `pip install -r requirements.txt`
